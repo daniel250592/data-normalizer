@@ -19,4 +19,5 @@ public class JobOffer {
     private List<String> typesOfContract;
     private List<String> workSchedules;
     private List<String> workModes;
+    private List<Offers> offers;
 }

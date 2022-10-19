@@ -23,7 +23,6 @@ public class PracujPl {
 
     private static final String URL = "https://www.pracuj.pl/praca/joboffers/wholepoland?kw=java&pn=1&rop=100&sc=4";
 
-
     public List<PracujPlDto> fetchData() {
 
         try (var httpClient = HttpClients.createDefault()) {
