@@ -58,7 +58,6 @@ public class ScraperService {
 
     public void scrape() {
 
-
         List<SolidJobOuterDto> solidJobOuterDtos = new ArrayList<>();
 
         driver.get(URL);
@@ -75,7 +74,7 @@ public class ScraperService {
     private void fetchData(List<SolidJobOuterDto> solidJobOuterDtos) {
         try {
             List<WebElement> start = driver.findElements(By.xpath("//div[@class ='d-flex flex-column flex-md-row align-items-start align-items-md-center flex-fill ml-0 ml-sm-3']"));
-            repeat(start, solidJobOuterDtos, 30, 0);
+            repeat(start, solidJobOuterDtos, 1, 0);
 
         } catch (StaleElementReferenceException e) {
             driver.get(URL);
