@@ -3,9 +3,11 @@ package pl.skoli.datanormalizer.receiver.solidjobs.service;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.stereotype.Service;
+import pl.skoli.datanormalizer.receiver.solidjobs.dto.SolidJobOuterDto;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -15,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScraperService {
 
-    //    private static final String URL = "https://solid.jobs/offers/it;experiences=Junior;categories=Programista;subcategories=Java";
     private static final String URL = "https://solid.jobs/offers/it;categories=Programista;subcategories=Java";
 
     private final ChromeDriver driver;
@@ -33,72 +34,37 @@ public class ScraperService {
         }
     }
 
+    public List<WebElement> createSubList(List<WebElement> elements) {
+        return elements.subList(elements.size() - 6, elements.size() - 1);
+    }
+
+    public List<WebElement> repeat(List<WebElement> start, List<SolidJobOuterDto> solidJobOuterDtos, int howMany, int counter) {
+
+        List<WebElement> toReturn = new ArrayList<>();
+
+        if (counter < howMany) {
+            counter++;
+            scrollByList(start);
+
+            List<WebElement> offers1 = driver.findElements(By.xpath("//div[@class ='d-flex flex-column flex-md-row align-items-start align-items-md-center flex-fill ml-0 ml-sm-3']"));
+            to(offers1.size(), solidJobOuterDtos);
+            toReturn = createSubList(offers1);
+            repeat(toReturn, solidJobOuterDtos, howMany, counter);
+
+        }
+        return toReturn;
+    }
+
 
     public void scrape() {
 
 
+        List<SolidJobOuterDto> solidJobOuterDtos = new ArrayList<>();
 
-        List<String> infoList = new ArrayList<>();
-        List<String> moneyList = new ArrayList<>();
-        List<String> linksList = new ArrayList<>();
         driver.get(URL);
 
-        List<WebElement> start = driver.findElements(By.xpath("//div[@class ='d-flex flex-column flex-md-row align-items-start align-items-md-center flex-fill ml-0 ml-sm-3']"));
 
-        for (WebElement offer : start) {
-            JavascriptExecutor jse = (JavascriptExecutor) driver;
-            jse.executeScript("arguments[0].scrollIntoView(true);", offer);
-
-        }
-
-        List<WebElement> offers1 = driver.findElements(By.xpath("//div[@class ='d-flex flex-column flex-md-row align-items-start align-items-md-center flex-fill ml-0 ml-sm-3']"));
-        to(offers1.size(), infoList, moneyList, linksList);
-
-        List<WebElement> offers2 = offers1.subList(offers1.size() - 6, offers1.size() - 1);
-
-
-        for (WebElement offer : offers2) {
-            JavascriptExecutor jse = (JavascriptExecutor) driver;
-            jse.executeScript("arguments[0].scrollIntoView(true);", offer);
-
-        }
-
-        List<WebElement> offers3 = driver.findElements(By.xpath("//div[@class ='d-flex flex-column flex-md-row align-items-start align-items-md-center flex-fill ml-0 ml-sm-3']"));
-        to(offers3.size(), infoList, moneyList, linksList);
-        List<WebElement> offers32 = offers3.subList(offers1.size() - 6, offers3.size() - 1);
-
-        for (WebElement offer : offers32) {
-            JavascriptExecutor jse = (JavascriptExecutor) driver;
-            jse.executeScript("arguments[0].scrollIntoView(true);", offer);
-
-        }
-
-        List<WebElement> offers4 = driver.findElements(By.xpath("//div[@class ='d-flex flex-column flex-md-row align-items-start align-items-md-center flex-fill ml-0 ml-sm-3']"));
-
-
-        List<WebElement> offers5 = offers4.subList(offers4.size() - 6, offers4.size() - 1);
-
-
-        for (WebElement offer : offers5) {
-            JavascriptExecutor jse = (JavascriptExecutor) driver;
-            jse.executeScript("arguments[0].scrollIntoView(true);", offer);
-
-        }
-
-        List<WebElement> offers6 = driver.findElements(By.xpath("//div[@class ='d-flex flex-column flex-md-row align-items-start align-items-md-center flex-fill ml-0 ml-sm-3']"));
-
-
-        List<WebElement> offers7 = offers6.subList(offers6.size() - 6, offers6.size() - 1);
-
-
-        for (WebElement offer : offers7) {
-            JavascriptExecutor jse = (JavascriptExecutor) driver;
-            jse.executeScript("arguments[0].scrollIntoView(true);", offer);
-
-        }
-
-
-        List<WebElement> offers8 = driver.findElements(By.xpath("//div[@class ='d-flex flex-column flex-md-row align-items-start align-items-md-center flex-fill ml-0 ml-sm-3']"));
+        fetchData(solidJobOuterDtos);
 
 
         System.out.println();
@@ -106,7 +72,18 @@ public class ScraperService {
 
     }
 
-    public void to(int range, List<String> infoList, List<String> moneyList, List<String> linkList) {
+    private void fetchData(List<SolidJobOuterDto> solidJobOuterDtos) {
+        try {
+            List<WebElement> start = driver.findElements(By.xpath("//div[@class ='d-flex flex-column flex-md-row align-items-start align-items-md-center flex-fill ml-0 ml-sm-3']"));
+            repeat(start, solidJobOuterDtos, 30, 0);
+
+        } catch (StaleElementReferenceException e) {
+            driver.get(URL);
+            fetchData(solidJobOuterDtos);
+        }
+    }
+
+    public void to(int range, List<SolidJobOuterDto> solidJobOuterDtos) {
 
         try {
             for (int i = 1; i < range; i++) {
@@ -120,9 +97,7 @@ public class ScraperService {
                 String offerMoney = driver.findElement(By.xpath(moneyS)).getText();
                 String offerLink = driver.findElement(By.xpath(linkS)).getAttribute("href");
 
-                infoList.add(offerInfo);
-                moneyList.add(offerMoney);
-                linkList.add(offerLink);
+                solidJobOuterDtos.add(new SolidJobOuterDto(offerInfo, offerMoney, offerLink));
             }
 
         } catch (org.openqa.selenium.NoSuchElementException e) {
