@@ -9,26 +9,21 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.stereotype.Service;
 import pl.skoli.datanormalizer.receiver.solidjobs.dto.SolidJobOuterDto;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ScraperService {
+public class SolidJobsScraperService {
 
     private static final String URL = "https://solid.jobs/offers/it;categories=Programista;subcategories=Java";
 
     private final ChromeDriver driver;
 
-    @PostConstruct
-    public void getData() {
-        scrape();
-    }
 
     public void scrollByList(List<WebElement> elements) {
         for (WebElement offer : elements) {
-            JavascriptExecutor jse = (JavascriptExecutor) driver;
+            JavascriptExecutor jse = driver;
             jse.executeScript("arguments[0].scrollIntoView(true);", offer);
 
         }
@@ -74,7 +69,7 @@ public class ScraperService {
     private void fetchData(List<SolidJobOuterDto> solidJobOuterDtos) {
         try {
             List<WebElement> start = driver.findElements(By.xpath("//div[@class ='d-flex flex-column flex-md-row align-items-start align-items-md-center flex-fill ml-0 ml-sm-3']"));
-            repeat(start, solidJobOuterDtos, 1, 0);
+            repeat(start, solidJobOuterDtos, 30, 0);
 
         } catch (StaleElementReferenceException e) {
             driver.get(URL);
