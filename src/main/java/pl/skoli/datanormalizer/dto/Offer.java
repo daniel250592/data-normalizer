@@ -2,16 +2,17 @@ package pl.skoli.datanormalizer.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
-@Data
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Offer {
+public class Offer implements Serializable {
 
     private OfferInfo offerInfo;
     private List<Salary> salary;

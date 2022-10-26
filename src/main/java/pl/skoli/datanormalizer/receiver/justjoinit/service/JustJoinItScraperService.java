@@ -8,17 +8,20 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
-import pl.skoli.datanormalizer.dto.interfaces.ScraperService;
+import pl.skoli.datanormalizer.interfaces.ScraperService;
 import pl.skoli.datanormalizer.receiver.justjoinit.dto.JustJoinItDto;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-@Component
+import static pl.skoli.datanormalizer.constants.Constants.JUST_JOIN_IT;
+
+@Component(JUST_JOIN_IT)
 @RequiredArgsConstructor
 @Log4j2
 public class JustJoinItScraperService implements ScraperService<JustJoinItDto> {
+
 
     private static final String URL = "https://justjoin.it/api/offers/search?categories[]=Java";
 

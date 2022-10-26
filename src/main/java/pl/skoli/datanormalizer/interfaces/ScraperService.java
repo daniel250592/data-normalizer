@@ -1,4 +1,4 @@
-package pl.skoli.datanormalizer.dto.interfaces;
+package pl.skoli.datanormalizer.interfaces;
 
 import java.util.List;
 

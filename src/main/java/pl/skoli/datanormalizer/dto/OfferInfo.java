@@ -2,22 +2,22 @@ package pl.skoli.datanormalizer.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pl.skoli.datanormalizer.dto.enums.Seniority;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
 
-@Data
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OfferInfo {
+public class OfferInfo implements Serializable {
 
     private String title;
     private String company;
     private String city;
     private Seniority seniority;
-    private final LocalDateTime fetchDate = LocalDateTime.now();
+//    private final LocalDateTime fetchDate = LocalDateTime.now();
 
 }
