@@ -16,7 +16,7 @@ public class SeleniumConfig {
     public ChromeDriver driver() {
         System.setProperty("webdriver.chrome.driver", location);
         ChromeOptions chromeOptions = new ChromeOptions();
-//        chromeOptions.addArguments("--headless");
+        chromeOptions.addArguments("--headless");
         chromeOptions.addArguments("--ignore-certificate-errors");
         chromeOptions.addArguments("--incognito");
         ChromeDriver driver = new ChromeDriver(chromeOptions);
