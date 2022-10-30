@@ -27,8 +27,8 @@ final class SalaryMapper {
         return type -> {
             if (type.getSalary() != null) {
                 return Salary.builder()
-                        .from(type.getSalary().getFrom())
-                        .to(type.getSalary().getTo())
+                        .minimum(type.getSalary().getFrom())
+                        .maximum(type.getSalary().getTo())
                         .currency(type.getSalary().getCurrency())
                         .contractType(ContractType.parseContract(type.getType()))
                         .build();
@@ -41,8 +41,8 @@ final class SalaryMapper {
 
     private Salary defaultSalary() {
         return Salary.builder()
-                .from(0)
-                .to(0)
+                .minimum(0)
+                .maximum(0)
                 .currency("Not defined")
                 .contractType(ContractType.UNKNOWN)
                 .build();

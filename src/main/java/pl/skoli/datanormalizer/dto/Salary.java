@@ -14,8 +14,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class Salary implements Serializable {
 
-    private Integer from;
-    private Integer to;
+    private Integer minimum;
+    private Integer maximum;
     private String currency;
     private ContractType contractType;
 }
