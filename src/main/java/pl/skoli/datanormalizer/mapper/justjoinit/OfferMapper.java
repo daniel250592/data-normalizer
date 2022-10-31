@@ -18,7 +18,7 @@ final class OfferMapper {
         return Offer.builder()
                 .offerInfo(offerInfoMapper.getOfferInfo(justJoinItDto))
                 .salaryList(salaryMapper.getSalary(justJoinItDto))
-                .technologies(technologiesMapper.gerTechnologies(justJoinItDto))
+                .technology(technologiesMapper.gerTechnology(justJoinItDto))
                 .build();
     }
 }

@@ -10,8 +10,8 @@ import java.util.List;
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Technologies implements Serializable {
+public class Technology implements Serializable {
 
-    private List<String> technologies;
+    private List<String> technologyList;
 
 }
